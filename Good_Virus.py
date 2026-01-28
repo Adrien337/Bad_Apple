@@ -9,7 +9,7 @@ from PySide6.QtGui import QPainter, QPixmap
 ########## Configuration
 path = "frames.zip"
 max_windows = 10
-fps = 60
+fps = 60 # Don't work if above 15 fps
 
 screenWidth = ctypes.windll.user32.GetSystemMetrics(0)
 screenHeight = ctypes.windll.user32.GetSystemMetrics(1)
@@ -19,7 +19,6 @@ screenHeight = ctypes.windll.user32.GetSystemMetrics(1)
 
 
 def readZIP(path: str):
-    """Return a list of QPixmaps from the ZIP file"""
     frames = []
     with zipfile.ZipFile(path, "r") as zip_ref:
         for name in sorted(zip_ref.namelist()):
@@ -52,7 +51,7 @@ class BadApple_Player:
         self.current_frame = 0
         self.timer = QTimer()
         self.timer.timeout.connect(self.next_frame)
-        self.windows = []  # Keep references to avoid garbage collection
+        self.windows = []  # Keep references of the frames
 
     def start(self):
         self.timer.start(int(1000 / self.fps))
